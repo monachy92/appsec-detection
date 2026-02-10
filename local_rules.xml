@@ -1,0 +1,62 @@
+<group name="dvwa,web_attack,">
+
+  <!-- SQL Injection Detection -->
+  <rule id="100200" level="10">
+    <if_sid>31100</if_sid>
+    <url>vulnerabilities/sqli</url>
+    <regex type="pcre2">(?i)(union.*select|'.*or.*'.*=|select.*from|insert.*into|delete.*from)</regex>
+    <description>SQL Injection attempt on DVWA detected</description>
+    <mitre>
+      <id>T1190</id>
+    </mitre>
+    <group>sql_injection,pci_dss_6.5.1,pci_dss_11.4,</group>
+  </rule>
+
+  <!-- XSS Detection -->
+  <rule id="100201" level="10">
+    <if_sid>31100</if_sid>
+    <url>vulnerabilities/xss</url>
+    <regex type="pcre2">(?i)(&lt;script|javascript:|onerror=|onload=|&lt;img.*src)</regex>
+    <description>XSS attempt on DVWA detected</description>
+    <mitre>
+      <id>T1059</id>
+    </mitre>
+    <group>xss,pci_dss_6.5.7,</group>
+  </rule>
+
+  <!-- Command Injection -->
+  <rule id="100202" level="12">
+    <if_sid>31100</if_sid>
+    <url>vulnerabilities/exec</url>
+    <regex type="pcre2">(?i)(;|&amp;&amp;|\||`|cat.*passwd|ls.*-la)</regex>
+    <description>Command injection attempt on DVWA detected</description>
+    <mitre>
+      <id>T1059</id>
+    </mitre>
+    <group>command_injection,</group>
+  </rule>
+
+  <!-- File Inclusion -->
+  <rule id="100203" level="10">
+    <if_sid>31100</if_sid>
+    <url>vulnerabilities/fi</url>
+    <regex type="pcre2">(?i)(\.\.\/|\.\.%2f|etc/passwd|boot\.ini)</regex>
+    <description>Path traversal/File inclusion attempt on DVWA</description>
+    <mitre>
+      <id>T1083</id>
+    </mitre>
+    <group>file_inclusion,</group>
+  </rule>
+
+  <!-- Multiple Failed Logins (Brute Force) -->
+  <rule id="100204" level="10" frequency="5" timeframe="120">
+    <if_matched_sid>100204</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple authentication failures from same source (Brute force attempt)</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+    <group>authentication_failures,brute_force,</group>
+  </rule>
+
+</group>
